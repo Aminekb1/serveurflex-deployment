@@ -1,0 +1,4 @@
+resources:
+  - frontend-deployment.yaml
+  - ../frontend/frontend-nginx-config.yaml
+# note: relative path from manifests/frontend; adjust if you place config elsewhere

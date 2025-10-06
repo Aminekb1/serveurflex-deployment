@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serveurflex-backend
+  namespace: serverflex
+  labels:
+    app: serveurflex-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: serveurflex-backend
+  template:
+    metadata:
+      labels:
+        app: serveurflex-backend
+    spec:
+      containers:
+        - name: serveurflex-backend
+          image: aminekbaier/serveurflex-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+              name: http
+          env:
+            - name: MONGO_HOST
+              value: "mongodb"           # service name from mongodb manifests
+            - name: MONGO_PORT
+              value: "27017"
+            - name: MONGO_DB
+              value: "serveurflex"
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-root-username
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: mongo-root-password
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 20
+      imagePullSecrets: []
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: serveurflex-backend
+  namespace: serverflex
+  labels:
+    app: serveurflex-backend
+spec:
+  selector:
+    app: serveurflex-backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP

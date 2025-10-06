@@ -1,0 +1,8 @@
+resources:
+  - namespace.yaml
+  - ingress.yaml
+  - backend/backend-deployment.yaml
+  - frontend/frontend-deployment.yaml
+  - frontend/frontend-nginx-config.yaml
+  - mongodb/mongodb-pv.yaml
+  - mongodb/mongodb-statefulset.yaml
