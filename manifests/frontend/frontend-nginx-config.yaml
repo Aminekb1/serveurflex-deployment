@@ -4,24 +4,39 @@ metadata:
   name: frontend-nginx-config
   namespace: serverflex
 data:
-  default.conf: |
-    events{}
-    http {
-      include /etc/nginx/mime.types;
-      server {
-        listen 80;
-        server_name localhost;
+  reverse-proxy.conf: |
+    server {
+      listen 80;
+      server_name localhost;
+
+      # Servir les assets référencés sous /src/assets/ en les mappant vers le répertoire build/assets
+      location /src/assets/ {
+        alias /usr/share/nginx/html/assets/;
+        try_files $uri $uri/ =404;
+        access_log off;
+      }
+
+      # Configuration pour les fichiers statiques (SPA)
+      location / {
         root /usr/share/nginx/html;
         index index.html;
-        location / {
-          try_files $uri $uri/ /index.html;
-        }
-        # Proxy /api to backend (optionnel)
-        location /api/ {
-          proxy_pass http://serveurflex-backend.serverflex.svc.cluster.local:5000/;
-          proxy_set_header Host $host;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        }
+        try_files $uri $uri/ /index.html;
+      }
+
+      # Proxy uniquement pour les routes API
+      location /api/ {
+        proxy_pass http://serveurflex-backend.serverflex.svc.cluster.local:5000/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        client_max_body_size 10M;
+
+        proxy_buffering off;
+        proxy_request_buffering off;
       }
     }

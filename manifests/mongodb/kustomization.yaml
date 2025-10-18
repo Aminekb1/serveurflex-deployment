@@ -2,3 +2,5 @@ resources:
   - mongo-deployment.yaml
   - mongo-service.yaml
   - mongo-pvc.yaml
+  - mongodb-pv.yaml
+  - mongodb-statefulset.yaml
