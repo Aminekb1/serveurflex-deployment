@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: serverflex
+  namespace: serveurflex
 spec:
   replicas: 1
   selector:
@@ -23,7 +23,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: serverflex
+  namespace: serveurflex
 spec:
   selector:
     app: serveurflex-backend
@@ -31,3 +31,4 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 5000
+  type: ClusterIP
