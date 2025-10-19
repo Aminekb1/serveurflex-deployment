@@ -7,7 +7,7 @@ data:
   reverse-proxy.conf: |
     server {
       listen 80;
-      server_name localhost;
+      server_name localhost frontend.local;
 
       # Servir les assets référencés sous /src/assets/ en les mappant vers le répertoire build/assets
       location /src/assets/ {
