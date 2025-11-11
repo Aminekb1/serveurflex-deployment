@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: aminekbaier/serveurflex-frontend:1.1.1
+        image: aminekbaier/serveurflex-frontend:1.1.2
         ports:
         - containerPort: 80
         volumeMounts:
