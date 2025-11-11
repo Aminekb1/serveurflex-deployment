@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: serveurflex-backend
-        image: aminekbaier/serveurflex-backend:1.1.19
+        image: aminekbaier/serveurflex-backend:1.1.1
         ports:
         - containerPort: 5000
 ---
